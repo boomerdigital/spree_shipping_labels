@@ -1,0 +1,8 @@
+<!doctype html>
+<html moznomarginboxes mozdisallowselectionprint lang="<%= I18n.locale %>">
+<head><%= render partial: 'spree/admin/shared/head' %></head>
+<body class="label-print">
+  <%= yield %>
+  <script>window.print()</script>
+</body>
+</html>

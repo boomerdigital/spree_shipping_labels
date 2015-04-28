@@ -1,0 +1,7 @@
+.label-print {
+  padding: 0;
+  img {
+    page-break-before: always;
+    &:first-child { page-break-before: auto }
+  }
+}
