@@ -14,7 +14,16 @@ class Spree::Calculator::Shipping::QuotedForLabel < Spree::ShippingCalculator
     package_type = package.preferred_package_type preferred_provider, preferred_service_type
     return preferred_fallback_price unless package_type
 
-    estimate = package_type.provider.estimate preferred_service_type, package_type, package
+    estimate = nil
+    begin
+      # Don't give the API more than 5 seconds to avoid being slow
+      timeout 5 do
+        # This could return nil and we still use the fallback price
+        estimate = package_type.provider.estimate preferred_service_type, package_type, package
+      end
+    rescue
+      # Any sort of error should be swallowed and the fallback price should be used
+    end
     return preferred_fallback_price unless estimate
 
     estimate
