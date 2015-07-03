@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/railsdog/spree_shipping_labels.svg?style=svg)](https://circleci.com/gh/railsdog/spree_shipping_labels) [![Code Climate](https://codeclimate.com/github/railsdog/spree_shipping_labels/badges/gpa.svg)](https://codeclimate.com/github/railsdog/spree_shipping_labels)
+
 Purpose
 =======
 

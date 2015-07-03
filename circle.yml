@@ -1,0 +1,19 @@
+machine:
+  ruby:
+    version: 2.1.5
+
+database:
+  override:
+    # replace CircleCI's generated database.yml
+    # this gem uses sqlite in a dummy app anyway
+    - echo "noop"
+
+test:
+  pre:
+    - bundle exec rake test_app: # build dummy app
+        environment:
+          RAILS_ENV: test
+          RACK_ENV: test
+
+  override:
+    - env CODECLIMATE_REPO_TOKEN=82dbcedf0fbe755e8f5faaa292dd202eb3857bb0be3f5baf9ccd953499fef747 bundle exec rspec spec
