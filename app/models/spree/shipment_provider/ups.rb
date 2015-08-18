@@ -29,6 +29,10 @@ class Spree::ShipmentProvider::Ups
     end
   end
 
+  def available?
+    super && !to_location.po_box?
+  end
+
   protected
 
   def config options

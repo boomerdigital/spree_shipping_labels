@@ -1,6 +1,19 @@
 require 'spree_core'
 require 'active_shipping'
 
+class ActiveShipping::Location
+  # Yea, a bit crazy. Borrowed from
+  PO_REGEXP = /^ *((#\d+)|((box|bin)[-. \/\\]?\d+)|(.*p[ \.]? ?(o|0)[-. \/\\]? *-?((box|bin)|b|(#|num)?\d+))|(p(ost)? *(o(ff(ice)?)?)? *((box|bin)|b)? *\d+)|(p *-?\/?(o)? *-?box)|post office box|((box|bin)|b) *(number|num|#)? *\d+|(num|number|#) *\d+)/i
+
+  # Override to try to automatically detect if an address is a P.O. Box
+  def po_box?
+    # Original implementation. Still allow it to be manually set
+    (@address_type == 'po_box') ||
+    (1..3).any? { |i| public_send("address#{i}") =~ PO_REGEXP }
+  end
+
+end
+
 module Spree::ShippingLabels
   # Thrown if a problem occurs when estimating or generating a label
   class Error < StandardError

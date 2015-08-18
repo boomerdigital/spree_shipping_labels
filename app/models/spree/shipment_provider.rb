@@ -9,6 +9,10 @@ class Spree::ShipmentProvider < Spree::Base
     backend.new(service_type, package_type, shipment).generate_label!
   end
 
+  def available? service_type, package
+    backend.new(service_type, nil, package).available?
+  end
+
   private
 
   def backend
