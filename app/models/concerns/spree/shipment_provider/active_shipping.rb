@@ -69,7 +69,8 @@ class Spree::ShipmentProvider < Spree::Base
     def package_for_label
       @package_for_label ||= ::ActiveShipping::Package.new @package.weight_in_oz,
         [@package_type.length, @package_type.width, @package_type.height],
-        units: :imperial, package_type: package_type_code(@package_type.provider_type)
+        units: :imperial, package_type: package_type_code(@package_type.provider_type),
+        value: @package.try(:item_cost).try(:to_s)
     end
 
     def provider_name
