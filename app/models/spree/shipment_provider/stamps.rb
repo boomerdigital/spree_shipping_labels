@@ -10,7 +10,7 @@ class Spree::ShipmentProvider::Stamps
 
   def generate_label!
     response = io.create_shipment from_location, to_location, package_for_label, [],
-      service: ActiveShipping::Stamps::SERVICE_TYPES.invert[@service_type], add_ons: 'SC-A-HP'
+      service: ActiveShipping::Stamps::SERVICE_TYPES.invert[@service_type], add_ons: ['SC-A-HP', 'SC-A-INS']
     ActiveRecord::Base.transaction do
       @package.update_attributes! tracking: response.tracking_number
       label = @package.label || @package.build_label
