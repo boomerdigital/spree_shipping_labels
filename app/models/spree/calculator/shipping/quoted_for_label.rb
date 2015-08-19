@@ -29,4 +29,9 @@ class Spree::Calculator::Shipping::QuotedForLabel < Spree::ShippingCalculator
     estimate
   end
 
+  def available? package
+    provider = Spree::ShipmentProvider.find_by name: preferred_provider
+    provider.available? preferred_service_type, package
+  end
+
 end

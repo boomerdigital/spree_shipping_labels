@@ -282,6 +282,3 @@ DEPENDENCIES
   simplecov
   spree_shipping_labels!
   sqlite3
-
-BUNDLED WITH
-   1.10.4

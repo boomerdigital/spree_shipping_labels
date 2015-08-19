@@ -20,4 +20,9 @@ module Spree::ShipmentProvider::Initialization
     @package = package
   end
 
+  # Defaults to being available.
+  def available?
+    true
+  end
+
 end
