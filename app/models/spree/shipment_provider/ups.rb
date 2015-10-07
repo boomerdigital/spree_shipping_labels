@@ -1,3 +1,6 @@
+require 'data_uri'
+require 'mini_magick'
+
 require_dependency 'spree/shipment_provider/active_shipping'
 
 class Spree::ShipmentProvider::Ups
@@ -22,7 +25,22 @@ class Spree::ShipmentProvider::Ups
       @package.update_attributes! tracking: label_data[:tracking_number]
       label = @package.label || @package.build_label
       label.cost = response.params['ShipmentResults']['ShipmentCharges']['TotalCharges']['MonetaryValue']
-      label.label_image = "data:image/#{label_data[:image]['LabelImageFormat']['Code'].downcase};base64,#{label_data[:image]['GraphicImage']}"
+
+      # UPS labels come in sideways. Rotate then save to model.
+      image = label_data[:image]
+      fmt = image['LabelImageFormat']['Code'].downcase
+      Tempfile.open ['ups-original', ".#{fmt}"] do |orig|
+        orig.binmode
+        orig.write URI::Data.new("data:image/#{fmt};base64,#{image['GraphicImage']}").data
+        image = MiniMagick::Image.open orig.path
+        image.rotate '90'
+        Tempfile.open ['ups-rotated', ".#{fmt}"] do |rotated|
+          rotated.binmode
+          image.write rotated
+          rotated.rewind
+          label.label_image = rotated
+        end
+      end
       label.label_image_file_name = 'label.gif'
       label.save!
       label
