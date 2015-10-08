@@ -1,8 +1,7 @@
 .label-print {
   padding: 0;
   img {
-    width: 4in; height: 6in;
     page-break-before: always;
-    &:first-of-type { page-break-before: auto }
+    &:first-child { page-break-before: auto }
   }
 }
