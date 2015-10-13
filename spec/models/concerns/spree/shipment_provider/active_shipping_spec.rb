@@ -53,7 +53,7 @@ describe Spree::ShipmentProvider::ActiveShipping do
     end
 
     it 'from spree shipment' do
-      shipment = create :shipment, order: create(:order_with_line_items)
+      shipment = create :shipment, order: create(:order_with_line_items), state: 'ready', insurance: 5.25
       shipment.order.line_items.first.variant.update_attribute :weight, 8.2
       provider = klass.new 'USPS First Class', package_type, shipment
       pkg = provider.send :package_for_label
@@ -61,6 +61,7 @@ describe Spree::ShipmentProvider::ActiveShipping do
       expect( pkg.inches(:length) ).to eq 12.5
       expect( pkg.inches(:width) ).to eq 9
       expect( pkg.inches(:height) ).to eq 2
+      expect( pkg.value ).to eq 525
     end
   end
 

@@ -15,6 +15,26 @@ describe Spree::Shipment do
     expect( shipment.weight ).to eq 25
   end
 
+  describe 'insurance' do
+    let(:order) { create :order_ready_to_ship }
+    let(:shipment) { order.shipments.reload.first }
+
+    it 'will initialize from the product value' do
+      expect( shipment.insurance.to_f ).to eq 10
+    end
+
+    it 'can update the initialization' do
+      order.line_items.first.update_attributes! quantity: 3
+      order.updater.update_shipments
+      expect( shipment.insurance.to_f ).to eq 30
+    end
+
+    it 'allows the user to override once shipping is no longer pending' do
+      shipment.update_attributes! insurance: 3.28
+      expect( shipment.insurance ).to eq 3.28
+    end
+  end
+
   describe 'label generation' do
     let(:provider) do
       Spree::ShipmentProvider.create! do |provider|
