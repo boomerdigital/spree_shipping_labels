@@ -67,10 +67,13 @@ class Spree::ShipmentProvider < Spree::Base
     # a label for. This information is based on the package_type and
     # package/shipment given to the initializer
     def package_for_label
-      @package_for_label ||= ::ActiveShipping::Package.new @package.weight_in_oz,
+      return if defined? @package_for_label
+      insurance = @package.try(:insurance).try :to_s
+      insurance = nil if insurance == '0'
+      @package_for_label = ::ActiveShipping::Package.new @package.weight_in_oz,
         [@package_type.length, @package_type.width, @package_type.height],
         units: :imperial, package_type: package_type_code(@package_type.provider_type),
-        value: @package.try(:insurance).try(:to_s)
+        value: insurance
     end
 
     def provider_name
