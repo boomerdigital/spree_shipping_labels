@@ -29,7 +29,7 @@ Spree::Shipment.class_eval do
     raise Spree::ShippingLabels::Error, 'Cannot generate a label without a package type' unless package_type
     raise Spree::ShippingLabels::Error, 'Cannot generate a label without a label-able selected shipping method' unless calculator
     # Restrict to just 5 seconds to get response to avoid appearing slow
-    timeout 5 do
+    timeout 10 do
       package_type.provider.generate_label! calculator.preferred_service_type, package_type, self
     end
   end
