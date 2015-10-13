@@ -72,4 +72,14 @@ Spree::Shipment.class_eval do
     calc if Spree::Calculator::Shipping::QuotedForLabel === calc
   end
 
+  # Will initialize the insurance based on the cost of the items in the package.
+  # This value will continue to re-initialize until it is `ready` at that
+  # point it moves into a manual mode where the value of the insurance can
+  # be manually specified.
+  def initialize_insurance
+    self.insurance = nil if state == 'pending'
+    self.insurance ||= item_cost
+  end
+  before_validation :initialize_insurance
+
 end

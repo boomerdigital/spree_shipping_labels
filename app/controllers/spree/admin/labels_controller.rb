@@ -21,7 +21,14 @@ class Spree::Admin::LabelsController < Spree::Admin::BaseController
   def create
     shipment = Spree::Shipment.find params[:shipment_id]
     shipment.package_type_id = params[:package_type_id]
-    shipment.generate_label! if shipment.package_type_id_changed?
+
+    # If insurance is provided and it is not 0 then update it also.
+    insurance = params[:insurance]
+    insurance = nil if insurance.to_f == 0.0
+    shipment.insurance = insurance if insurance.present?
+
+    shipment.generate_label! if shipment.package_type_id_changed? || shipment.insurance_changed?
+
     render json: shipment.label, only: %i(cost)
   end
 

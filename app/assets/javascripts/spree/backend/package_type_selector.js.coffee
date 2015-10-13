@@ -7,8 +7,9 @@ $(document).on 'change', selector, ->
 
   resource = $_.attr 'data-resource'
   package_type_id = $_.val()
+  insurance = $_.attr 'data-insurance'
 
-  $.post resource, package_type_id: package_type_id
+  $.post resource, package_type_id: package_type_id, insurance: insurance
     .fail ->
       $_.val $_.attr('data-last-value')
       alert 'Failed to generate label for selected package.'

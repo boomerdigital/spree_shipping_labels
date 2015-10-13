@@ -104,8 +104,16 @@ class ActiveShipping::UPS
   }
 
   def build_package_node_with_package_type xml, package, options = {}
+    package_value = package.value ? '%.2f' % (package.value.to_f / 100) : nil
     build_package_node_without_package_type xml, package, options
     xml.doc.at('//PackagingType/Code').content = package.options[:package_type] if package.options[:package_type]
+    xml.doc.at('//PackageServiceOptions') << %Q{
+      <InsuredValue>
+        <MonetaryValue>
+          #{package_value}
+        </MonetaryValue>
+      </InsuredValue>
+    } if package_value
   end
   alias_method_chain :build_package_node, :package_type unless instance_methods.include? :build_package_node_without_package_type
 end

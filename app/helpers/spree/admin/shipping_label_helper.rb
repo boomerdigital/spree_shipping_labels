@@ -17,7 +17,8 @@ module Spree::Admin::ShippingLabelHelper
     select_tag nil, options_for_select(options, shipment.package_type_id),
       id: nil, class: 'package-type-selector', data: {
         resource: admin_label_path(shipment_id: shipment.id),
-        cost: shipment.label.try(:cost), order: shipment.order_id
+        cost: shipment.label.try(:cost), order: shipment.order_id,
+        shipment: shipment.id
       }
   end
 
