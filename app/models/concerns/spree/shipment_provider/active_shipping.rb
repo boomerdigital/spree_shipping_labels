@@ -24,7 +24,7 @@ class Spree::ShipmentProvider < Spree::Base
       @io ||= begin
         secrets = Rails.application.secrets.public_send provider_name.downcase
         options = config secrets
-        options[:test] = secrets.has_key?('test_model') ? secrets['test_mode'] : true
+        options[:test] = secrets.has_key?('test_mode') ? secrets['test_mode'] : true
         ::ActiveShipping.const_get(provider_name).new(options).tap {|io| io.logger = Rails.logger}
       end
     end
