@@ -52,16 +52,29 @@ describe Spree::ShipmentProvider::ActiveShipping do
       expect( pkg.inches(:height) ).to eq 2
     end
 
-    it 'from spree shipment' do
-      shipment = create :shipment, order: create(:order_with_line_items), state: 'ready', insurance: 5.25
-      shipment.order.line_items.first.variant.update_attribute :weight, 8.2
-      provider = klass.new 'USPS First Class', package_type, shipment
-      pkg = provider.send :package_for_label
-      expect( pkg.ounces.to_f ).to eq 8.2
-      expect( pkg.inches(:length) ).to eq 12.5
-      expect( pkg.inches(:width) ).to eq 9
-      expect( pkg.inches(:height) ).to eq 2
-      expect( pkg.value ).to eq 525
+    describe 'from spree shipment' do
+      before do
+        @shipment = create :shipment, order: create(:order_with_line_items), state: 'ready', insurance: 5.25
+        @shipment.order.line_items.first.variant.update_attribute :weight, 8.2
+        @provider = klass.new 'USPS First Class', package_type, @shipment
+      end
+
+      it 'with insurance enabled' do
+        @shipment.update_attributes! insurance_enabled: true
+        pkg = @provider.send :package_for_label
+
+        expect( pkg.ounces.to_f ).to eq 8.2
+        expect( pkg.inches(:length) ).to eq 12.5
+        expect( pkg.inches(:width) ).to eq 9
+        expect( pkg.inches(:height) ).to eq 2
+        expect( pkg.value ).to eq 525
+      end
+
+      it 'with no insurance' do
+        @shipment.update_attributes! insurance_enabled: false
+        pkg = @provider.send :package_for_label
+        expect( pkg.value ).to eq nil
+      end
     end
   end
 
