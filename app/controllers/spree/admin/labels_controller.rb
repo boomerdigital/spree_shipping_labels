@@ -25,9 +25,15 @@ class Spree::Admin::LabelsController < Spree::Admin::BaseController
     # If insurance is provided and it is not 0 then update it also.
     insurance = params[:insurance]
     insurance = nil if insurance.to_f == 0.0
-    shipment.insurance = insurance if insurance.present?
+    if insurance.present?
+      shipment.insurance_enabled = true
+      shipment.insurance = insurance
+    else
+      shipment.insurance_enabled = false
+    end
 
-    shipment.generate_label! if shipment.package_type_id_changed? || shipment.insurance_changed?
+    shipment.generate_label! if
+      shipment.package_type_id_changed? || shipment.insurance_changed? || shipment.insurance_enabled_changed?
 
     render json: shipment.label, only: %i(cost)
   end

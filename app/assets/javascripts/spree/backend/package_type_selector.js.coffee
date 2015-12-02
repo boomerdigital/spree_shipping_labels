@@ -8,6 +8,7 @@ $(document).on 'change', selector, ->
   resource = $_.attr 'data-resource'
   package_type_id = $_.val()
   insurance = $_.attr 'data-insurance'
+  insurace = null if insurance == ''
 
   $.post resource, package_type_id: package_type_id, insurance: insurance
     .fail ->

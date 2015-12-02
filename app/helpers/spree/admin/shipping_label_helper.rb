@@ -18,7 +18,7 @@ module Spree::Admin::ShippingLabelHelper
       id: nil, class: 'package-type-selector', data: {
         resource: admin_label_path(shipment_id: shipment.id),
         cost: shipment.label.try(:cost), order: shipment.order_id,
-        shipment: shipment.id
+        shipment: shipment.id, insurance: (shipment.insurance_enabled? ? shipment.insurance : nil)
       }
   end
 
