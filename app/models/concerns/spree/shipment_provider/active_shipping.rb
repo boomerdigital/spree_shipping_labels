@@ -67,7 +67,7 @@ class Spree::ShipmentProvider < Spree::Base
     # a label for. This information is based on the package_type and
     # package/shipment given to the initializer
     def package_for_label
-      return if defined? @package_for_label
+      return @package_for_label if defined? @package_for_label
       insurance = @package.try(:insurance).try :to_s
       insurance = nil if insurance == '0'
       insurance = nil unless @package.try(:insurance_enabled?)
