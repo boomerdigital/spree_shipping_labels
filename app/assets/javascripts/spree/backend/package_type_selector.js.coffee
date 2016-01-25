@@ -11,9 +11,13 @@ $(document).on 'change', selector, ->
   insurace = null if insurance == ''
 
   $.post resource, package_type_id: package_type_id, insurance: insurance
-    .fail ->
+    .fail (transport)->
       $_.val $_.attr('data-last-value')
-      alert 'Failed to generate label for selected package.'
+      msg = if transport.responseJSON
+        transport.responseJSON.exception
+      else
+        'Failed to generate label for selected package.'
+      alert msg
     .done (label)->
       last_value = $_.attr 'data-last-value'
       $_.find("option[value='']").remove()

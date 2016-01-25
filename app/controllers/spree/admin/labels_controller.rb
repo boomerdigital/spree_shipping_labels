@@ -32,10 +32,13 @@ class Spree::Admin::LabelsController < Spree::Admin::BaseController
       shipment.insurance_enabled = false
     end
 
-    shipment.generate_label! if
-      shipment.package_type_id_changed? || shipment.insurance_changed? || shipment.insurance_enabled_changed?
-
-    render json: shipment.label, only: %i(cost)
+    begin
+      shipment.generate_label! if
+        shipment.package_type_id_changed? || shipment.insurance_changed? || shipment.insurance_enabled_changed?
+      render json: shipment.label, only: %i(cost)
+    rescue Spree::ShippingLabels::Error
+      render json: { exception: $!.message }, status: :unprocessable_entity
+    end
   end
 
 end
